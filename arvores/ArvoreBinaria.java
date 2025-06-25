@@ -1,7 +1,4 @@
-import java.util.LinkedList;
-import java.util.Queue;
-
-public class ArvoreBinaria<E extends Comparable<E>>{
+public class ArvoreBinaria<E extends Comparable<E>> {
     private NoBinario<E> raiz;
     private int quantidade = 0;
 
@@ -50,21 +47,28 @@ public class ArvoreBinaria<E extends Comparable<E>>{
             return;
         }
 
-        Queue<NoBinario<E>> fila = new LinkedList<>();
-        fila.offer(raiz);
-        int nivel = 0;
-
-        while (!fila.isEmpty()) {
-            int nosNoNivel = fila.size();
+        int altura = altura(raiz);
+        for (int nivel = 0; nivel < altura; nivel++) {
             System.out.print("Nível " + nivel + ": ");
-            for (int i = 0; i < nosNoNivel; i++) {
-                NoBinario<E> atual = fila.poll();
-                System.out.print(atual.getElemento() + " ");
-                if (atual.getEsquerdo() != null) fila.offer(atual.getEsquerdo());
-                if (atual.getDireito() != null) fila.offer(atual.getDireito());
-            }
+            imprimirNivel(raiz, nivel);
             System.out.println();
-            nivel++;
+        }
+    }
+
+    private int altura(NoBinario<E> no) {
+        if (no == null) return 0;
+        int altEsq = altura(no.getEsquerdo());
+        int altDir = altura(no.getDireito());
+        return 1 + Math.max(altEsq, altDir);
+    }
+
+    private void imprimirNivel(NoBinario<E> no, int nivel) {
+        if (no == null) return;
+        if (nivel == 0) {
+            System.out.print(no.getElemento() + " ");
+        } else {
+            imprimirNivel(no.getEsquerdo(), nivel - 1);
+            imprimirNivel(no.getDireito(), nivel - 1);
         }
     }
 
@@ -79,5 +83,17 @@ public class ArvoreBinaria<E extends Comparable<E>>{
         if (altEsq == -1 || altDir == -1) return -1;
         if (Math.abs(altEsq - altDir) > 1) return -1;
         return 1 + Math.max(altEsq, altDir);
+    }
+
+    public void percorrerEmOrdem() {
+    percorrerEmOrdem(raiz);
+    }
+    
+    private void percorrerEmOrdem(NoBinario<E> no) {
+    if (no != null) {
+        percorrerEmOrdem(no.getEsquerdo());
+        System.out.println(no.getElemento());
+        percorrerEmOrdem(no.getDireito());
+        }
     }
 }
